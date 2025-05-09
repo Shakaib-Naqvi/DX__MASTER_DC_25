@@ -8,7 +8,7 @@
 // #define MODBUS_FUNCTION_WRITE_SINGLE_REGISTER 0x06
 
 // HardwareSerial RS485Serial(1);  // Using Serial1 for RS485 communication
-uint16_t holdingRegisters[50];  // Holding register example
+// uint16_t holdingRegisters[50];  // Holding register example
 // void readHoldingRegisters(uint16_t registerAddress, uint16_t numRegisters);
 // void writeSingleRegister(uint16_t registerAddress, uint16_t value);
 // void sendErrorResponse(uint8_t slaveId, uint8_t functionCode, uint8_t exceptionCode);

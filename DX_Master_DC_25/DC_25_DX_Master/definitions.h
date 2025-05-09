@@ -7,14 +7,17 @@ Suction Superheat (SPH) = Actual Suction Gas Temperature – Temperature from PT
 
 uint16_t registers[10];
 
+int16_t temps[6]; // For 1 ADAM Module
+int16_t holdingRegisters[50]; // For CoolMay HMI
+
 // Compressor data structure
 struct CompX {
-  float SuctionTemp = 0;
-  float dischargeTemp = 0;
-  float SprayTemp = 0;
-  float SuperHeatPV = 0;
-  float SupplyTemp = 0;
-  float ReturnTemp = 0;
+  int16_t SuctionTemp = 0;
+  int16_t dischargeTemp = 0;
+  int16_t SprayTemp = 0;
+  int16_t SuperHeatPV = 0;
+  int16_t SupplyTemp = 0;
+  int16_t ReturnTemp = 0;
   uint16_t SuperHeatSV = 0;
 
   float suctionPressure = 0;

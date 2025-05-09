@@ -119,6 +119,83 @@ void writeSingleRegister(uint8_t slaveId, uint16_t address, uint16_t value) {
   // readHoldingRegisters(slaveId, address, 10, registers);
 }
 
+// void writeMultipleRegister(uint8_t slaveId, uint16_t address, uint16_t value) {
+//   // sendModbusRequest(slaveId, 0x06, address, value);
+
+//   digitalWrite(RS485_DE_RE_PIN, HIGH);  // Set DE/RE pin high for transmit mode
+//   uint8_t request[8];
+//   request[0] = slaveId;
+//   request[1] = 0x16;
+//   request[2] = 0 >> 8;
+//   request[3] = 4 & 0xFF;
+//   request[4] = 5 >> 8;
+//   request[5] = 5 & 0xFF;
+//   uint16_t crc = calculateCRC(request, 6);
+//   request[6] = crc & 0xFF;
+//   request[7] = crc >> 8;
+
+//   RS485Serial.write(request, sizeof(request));
+//   RS485Serial.flush();  // Ensure all data is sent
+//   clearSerialBuffer();  // Ensure buffer is empty
+//   Serial.println("Sent Request: ");
+//   for (int i = 0; i < 8; i++) {
+//     Serial.print(request[i]);
+//     Serial.print(" ");
+//   }
+//   Serial.println();
+//   digitalWrite(RS485_DE_RE_PIN, LOW);  // Set DE/RE pin low for receive mode
+// }
+
+void writeMultipleRegisters(uint8_t slaveId, uint16_t startAddress, int16_t *values, uint8_t quantity) {
+  const uint8_t byteCount = quantity * 2;
+  const uint8_t requestLength = 9 + byteCount;
+
+  uint8_t request[256];
+  request[0] = slaveId;
+  request[1] = 0x10;
+  request[2] = startAddress >> 8;
+  request[3] = startAddress & 0xFF;
+  request[4] = quantity >> 8;
+  request[5] = quantity & 0xFF;
+  request[6] = byteCount;
+
+  for (uint8_t i = 0; i < quantity; i++) {
+    request[7 + i * 2] = values[i] >> 8;
+    request[8 + i * 2] = values[i] & 0xFF;
+  }
+
+  uint16_t crc = calculateCRC(request, 7 + byteCount);
+  request[7 + byteCount] = crc & 0xFF;
+  request[8 + byteCount] = crc >> 8;
+
+  digitalWrite(RS485_DE_RE_PIN, HIGH);
+  RS485Serial.write(request, requestLength);
+  RS485Serial.flush();
+  digitalWrite(RS485_DE_RE_PIN, LOW);
+
+  Serial.println("Sent Request:");
+  for (int i = 0; i < requestLength; i++) {
+    Serial.print(request[i], HEX);
+    Serial.print(" ");
+  }
+  Serial.println();
+}
+
+// bool readModbusResponse(uint8_t *response, uint16_t length) {
+//   uint32_t startTime = millis();
+//   uint16_t index = 0;
+//   while (millis() - startTime < 500) {  // 1000ms timeout
+//     if (RS485Serial.available()) {
+//       response[index++] = RS485Serial.read();
+//       if (index >= length) return true;
+//     }
+//   }
+//   Serial.println("Timeout or Incomplete Response!");
+
+//   delay(500);
+//   // readHoldingRegisters(slaveId, address, 10, registers);
+// }
+
 
 
 

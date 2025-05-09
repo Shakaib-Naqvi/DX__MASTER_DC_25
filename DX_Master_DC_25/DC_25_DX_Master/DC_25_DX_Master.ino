@@ -181,184 +181,204 @@ void runVFD(uint16_t freq, uint16_t command) {
 //   }
 // }
 
-// void save_in_holding_registers() {
 
+// HMI Writing task
+void HMITask(void* pvParameter) {
+  while (true) {
+    save_in_holding_registers();
+    writeMultipleRegisters(1, 0, holdingRegisters, 50);
 
+    vTaskDelay(500 / portTICK_PERIOD_MS);  // Delay for 500 milliseconds
+  }
+}
 
-//   holdingRegisters[10] = currentStep;
-//   holdingRegisters[11] = r_a_temp_Setpoint;
-//   float_As_Registers = (uint16_t*)&Suction_Super_Heat;
-//   holdingRegisters[12] = float_As_Registers[0];
-//   holdingRegisters[13] = float_As_Registers[1];
-//   holdingRegisters[14] = compressor_onoff;
-//   holdingRegisters[15] = sv_l_u;
-//   holdingRegisters[16] = condenser_fan_1;
-//   holdingRegisters[17] = 0;
-//   holdingRegisters[18] = 0;
-//   holdingRegisters[19] = 0;
-//   holdingRegisters[20] = 0;
-//   holdingRegisters[21] = sl_ps;
-//   holdingRegisters[22] = dl_ps;
-//   holdingRegisters[23] = o_ps;
-//   holdingRegisters[24] = pf_relay;
-//   holdingRegisters[25] = Low_Temperature_Alarm;
-//   holdingRegisters[26] = High_Temperature_Alarm;
-//   holdingRegisters[27] = Spray_Temperature_Alarm;
-//   holdingRegisters[28] = 0;
-//   holdingRegisters[29] = 0;
-//   holdingRegisters[30] = 0;
-//   holdingRegisters[31] = 0;
-//   holdingRegisters[32] = 0;
-//   holdingRegisters[33] = 0;
-//   holdingRegisters[34] = start;
-//   holdingRegisters[35] = 0;
-//   holdingRegisters[36] = compressor_on_delay;
-//   switch (gas_selected_s) {
-//     case 0:
-//       holdingRegisters[37] = 1;
-//       holdingRegisters[38] = 0;
-//       holdingRegisters[39] = 0;
-//       holdingRegisters[40] = 0;
-//       holdingRegisters[41] = 0;
-//       break;
-//     case 1:
-//       holdingRegisters[37] = 0;
-//       holdingRegisters[38] = 1;
-//       holdingRegisters[39] = 0;
-//       holdingRegisters[40] = 0;
-//       holdingRegisters[41] = 0;
-//       break;
-//     case 2:
-//       holdingRegisters[37] = 0;
-//       holdingRegisters[38] = 0;
-//       holdingRegisters[39] = 1;
-//       holdingRegisters[40] = 0;
-//       holdingRegisters[41] = 0;
-//       break;
-//     case 3:
-//       holdingRegisters[37] = 0;
-//       holdingRegisters[38] = 0;
-//       holdingRegisters[39] = 0;
-//       holdingRegisters[40] = 1;
-//       holdingRegisters[41] = 0;
-//       break;
-//     case 4:
-//       holdingRegisters[37] = 0;
-//       holdingRegisters[38] = 0;
-//       holdingRegisters[39] = 0;
-//       holdingRegisters[40] = 0;
-//       holdingRegisters[41] = 1;
-//       break;
-//     default:
-//       holdingRegisters[37] = 1;
-//       holdingRegisters[38] = 0;
-//       holdingRegisters[39] = 0;
-//       holdingRegisters[40] = 0;
-//       holdingRegisters[41] = 0;
-//       break;
-//   }
-//   // holdingRegisters[42] = 0;
-//   // holdingRegisters[43] = 0;
-//   // holdingRegisters[44] = 0;
-//   // holdingRegisters[45] = 0;
-//   // holdingRegisters[46] = defrosting_on_delay;
-//   // holdingRegisters[47] = defrosting_off_delay;
-//   // holdingRegisters[48] = defrosting_onoff;
-//   // if (defrosting_on_flag == 1) {
-//   //   holdingRegisters[49] = remaining_time / 3600;
-//   //   holdingRegisters[63] = (remaining_time % 3600) / 60;
-//   //   holdingRegisters[64] = (remaining_time % 3600) % 60;
-//   // } else {
-//   //   holdingRegisters[49] = remaining_time / 3600;
-//   //   holdingRegisters[63] = (remaining_time % 3600) / 60;
-//   //   holdingRegisters[64] = (remaining_time % 3600) % 60;
-//   // }
-//   holdingRegisters[50] = totalInterruptCounter;
-//   // if (sv_l_u != 1) {
-//   holdingRegisters[51] = totalInterruptCounter_2;
-//   // } else {
-//   //   holdingRegisters[51] = 0;
-//   // }
-//   switch (gas_selected_d) {
-//     case 5:
-//       holdingRegisters[52] = 1;
-//       holdingRegisters[53] = 0;
-//       holdingRegisters[54] = 0;
-//       holdingRegisters[55] = 0;
-//       holdingRegisters[56] = 0;
-//       break;
-//     case 6:
-//       holdingRegisters[52] = 0;
-//       holdingRegisters[53] = 1;
-//       holdingRegisters[54] = 0;
-//       holdingRegisters[55] = 0;
-//       holdingRegisters[56] = 0;
-//       break;
-//     case 7:
-//       holdingRegisters[52] = 0;
-//       holdingRegisters[53] = 0;
-//       holdingRegisters[54] = 1;
-//       holdingRegisters[55] = 0;
-//       holdingRegisters[56] = 0;
-//       break;
-//     case 8:
-//       holdingRegisters[52] = 0;
-//       holdingRegisters[53] = 0;
-//       holdingRegisters[54] = 0;
-//       holdingRegisters[55] = 1;
-//       holdingRegisters[56] = 0;
-//       break;
-//     case 9:
-//       holdingRegisters[52] = 0;
-//       holdingRegisters[53] = 0;
-//       holdingRegisters[54] = 0;
-//       holdingRegisters[55] = 0;
-//       holdingRegisters[56] = 1;
-//       break;
-//     default:
-//       holdingRegisters[52] = 1;
-//       holdingRegisters[53] = 0;
-//       holdingRegisters[54] = 0;
-//       holdingRegisters[55] = 0;
-//       holdingRegisters[56] = 0;
-//       break;
-//   }
-//   // if (defrosting_en == 0) {
-//   //   holdingRegisters[61] = 0;
-//   //   holdingRegisters[62] = 1;
+void save_in_holding_registers() {
 
-//   // } else {
-//   //   holdingRegisters[61] = 1;
-//   //   holdingRegisters[62] = 0;
-//   // }
-//   // if (defrosting_sw_timer == 1) {
-//   //   holdingRegisters[65] = 1;
-//   //   holdingRegisters[66] = 0;
-//   // } else {
-//   //   holdingRegisters[65] = 0;
-//   //   holdingRegisters[66] = 1;
-//   // }
-//   // holdingRegisters[67] = tolerance;
-//   // holdingRegisters[68] = Heat_Setpoint;
-//   holdingRegisters[69] = compressor_off_delay;
-//   holdingRegisters[71] = power_on_pres;
-//   holdingRegisters[72] = cut_off_pres;
-//   holdingRegisters[73] = solenoid_valve_on_delay;
-//   // holdingRegisters[74] = defrosting_electrical;
-//   // holdingRegisters[75] = defrosting_mechanical;
+  holdingRegisters[0] = Comp1.SuctionTemp;
+  holdingRegisters[1] = Comp1.dischargeTemp;
+  holdingRegisters[2] = Comp1.SprayTemp;
+  holdingRegisters[3] = Comp1.SupplyTemp;
+  holdingRegisters[4] = Comp2.SuctionTemp;
+  holdingRegisters[5] = Comp2.dischargeTemp;
+  holdingRegisters[6] = currentStep;
+  holdingRegisters[7];
+  holdingRegisters[8];
+  holdingRegisters[9];
+  holdingRegisters[10];
 
-//   holdingRegisters[76] = condenser_fan_enable;
-//   holdingRegisters[77] = condenser_fan_disable;
-//   holdingRegisters[78] = low_temp_alarm;
-//   // holdingRegisters[79] = high_temp_alarm;
-//   // holdingRegisters[80] = low_pres_alarm;
-//   // holdingRegisters[81] = high_pres_alarm;
-//   // holdingRegisters[82] = stop_alarm;
-//   // holdingRegisters[83] = 1; // inner_fan_alarm
-//   // holdingRegisters[87] = saved_hours;
-//   holdingRegisters[89] = stop;
-//   holdingRegisters[90] = vfd_start;
-// }
+  // holdingRegisters[11] = r_a_temp_Setpoint;
+  // float_As_Registers = (uint16_t*)&Suction_Super_Heat;
+  // holdingRegisters[12] = float_As_Registers[0];
+  // holdingRegisters[13] = float_As_Registers[1];
+  // holdingRegisters[14] = compressor_onoff;
+  // holdingRegisters[15] = sv_l_u;
+  // holdingRegisters[16] = condenser_fan_1;
+  // holdingRegisters[17] = 0;
+  // holdingRegisters[18] = 0;
+  // holdingRegisters[19] = 0;
+  // holdingRegisters[20] = 0;
+  // holdingRegisters[21] = sl_ps;
+  // holdingRegisters[22] = dl_ps;
+  // holdingRegisters[23] = o_ps;
+  // holdingRegisters[24] = pf_relay;
+  // holdingRegisters[25] = Low_Temperature_Alarm;
+  // holdingRegisters[26] = High_Temperature_Alarm;
+  // holdingRegisters[27] = Spray_Temperature_Alarm;
+  // holdingRegisters[28] = 0;
+  // holdingRegisters[29] = 0;
+  // holdingRegisters[30] = 0;
+  // holdingRegisters[31] = 0;
+  // holdingRegisters[32] = 0;
+  // holdingRegisters[33] = 0;
+  // holdingRegisters[34] = start;
+  // holdingRegisters[35] = 0;
+  // holdingRegisters[36] = compressor_on_delay;
+  // switch (gas_selected_s) {
+  //   case 0:
+  //     holdingRegisters[37] = 1;
+  //     holdingRegisters[38] = 0;
+  //     holdingRegisters[39] = 0;
+  //     holdingRegisters[40] = 0;
+  //     holdingRegisters[41] = 0;
+  //     break;
+  //   case 1:
+  //     holdingRegisters[37] = 0;
+  //     holdingRegisters[38] = 1;
+  //     holdingRegisters[39] = 0;
+  //     holdingRegisters[40] = 0;
+  //     holdingRegisters[41] = 0;
+  //     break;
+  //   case 2:
+  //     holdingRegisters[37] = 0;
+  //     holdingRegisters[38] = 0;
+  //     holdingRegisters[39] = 1;
+  //     holdingRegisters[40] = 0;
+  //     holdingRegisters[41] = 0;
+  //     break;
+  //   case 3:
+  //     holdingRegisters[37] = 0;
+  //     holdingRegisters[38] = 0;
+  //     holdingRegisters[39] = 0;
+  //     holdingRegisters[40] = 1;
+  //     holdingRegisters[41] = 0;
+  //     break;
+  //   case 4:
+  //     holdingRegisters[37] = 0;
+  //     holdingRegisters[38] = 0;
+  //     holdingRegisters[39] = 0;
+  //     holdingRegisters[40] = 0;
+  //     holdingRegisters[41] = 1;
+  //     break;
+  //   default:
+  //     holdingRegisters[37] = 1;
+  //     holdingRegisters[38] = 0;
+  //     holdingRegisters[39] = 0;
+  //     holdingRegisters[40] = 0;
+  //     holdingRegisters[41] = 0;
+  //     break;
+  // }
+  // // holdingRegisters[42] = 0;
+  // // holdingRegisters[43] = 0;
+  // // holdingRegisters[44] = 0;
+  // // holdingRegisters[45] = 0;
+  // // holdingRegisters[46] = defrosting_on_delay;
+  // // holdingRegisters[47] = defrosting_off_delay;
+  // // holdingRegisters[48] = defrosting_onoff;
+  // // if (defrosting_on_flag == 1) {
+  // //   holdingRegisters[49] = remaining_time / 3600;
+  // //   holdingRegisters[63] = (remaining_time % 3600) / 60;
+  // //   holdingRegisters[64] = (remaining_time % 3600) % 60;
+  // // } else {
+  // //   holdingRegisters[49] = remaining_time / 3600;
+  // //   holdingRegisters[63] = (remaining_time % 3600) / 60;
+  // //   holdingRegisters[64] = (remaining_time % 3600) % 60;
+  // // }
+  // holdingRegisters[50] = totalInterruptCounter;
+  // // if (sv_l_u != 1) {
+  // holdingRegisters[51] = totalInterruptCounter_2;
+  // // } else {
+  // //   holdingRegisters[51] = 0;
+  // // }
+  // switch (gas_selected_d) {
+  //   case 5:
+  //     holdingRegisters[52] = 1;
+  //     holdingRegisters[53] = 0;
+  //     holdingRegisters[54] = 0;
+  //     holdingRegisters[55] = 0;
+  //     holdingRegisters[56] = 0;
+  //     break;
+  //   case 6:
+  //     holdingRegisters[52] = 0;
+  //     holdingRegisters[53] = 1;
+  //     holdingRegisters[54] = 0;
+  //     holdingRegisters[55] = 0;
+  //     holdingRegisters[56] = 0;
+  //     break;
+  //   case 7:
+  //     holdingRegisters[52] = 0;
+  //     holdingRegisters[53] = 0;
+  //     holdingRegisters[54] = 1;
+  //     holdingRegisters[55] = 0;
+  //     holdingRegisters[56] = 0;
+  //     break;
+  //   case 8:
+  //     holdingRegisters[52] = 0;
+  //     holdingRegisters[53] = 0;
+  //     holdingRegisters[54] = 0;
+  //     holdingRegisters[55] = 1;
+  //     holdingRegisters[56] = 0;
+  //     break;
+  //   case 9:
+  //     holdingRegisters[52] = 0;
+  //     holdingRegisters[53] = 0;
+  //     holdingRegisters[54] = 0;
+  //     holdingRegisters[55] = 0;
+  //     holdingRegisters[56] = 1;
+  //     break;
+  //   default:
+  //     holdingRegisters[52] = 1;
+  //     holdingRegisters[53] = 0;
+  //     holdingRegisters[54] = 0;
+  //     holdingRegisters[55] = 0;
+  //     holdingRegisters[56] = 0;
+  //     break;
+  // }
+  // // if (defrosting_en == 0) {
+  // //   holdingRegisters[61] = 0;
+  // //   holdingRegisters[62] = 1;
+
+  // // } else {
+  // //   holdingRegisters[61] = 1;
+  // //   holdingRegisters[62] = 0;
+  // // }
+  // // if (defrosting_sw_timer == 1) {
+  // //   holdingRegisters[65] = 1;
+  // //   holdingRegisters[66] = 0;
+  // // } else {
+  // //   holdingRegisters[65] = 0;
+  // //   holdingRegisters[66] = 1;
+  // // }
+  // // holdingRegisters[67] = tolerance;
+  // // holdingRegisters[68] = Heat_Setpoint;
+  // holdingRegisters[69] = compressor_off_delay;
+  // holdingRegisters[71] = power_on_pres;
+  // holdingRegisters[72] = cut_off_pres;
+  // holdingRegisters[73] = solenoid_valve_on_delay;
+  // // holdingRegisters[74] = defrosting_electrical;
+  // // holdingRegisters[75] = defrosting_mechanical;
+
+  // holdingRegisters[76] = condenser_fan_enable;
+  // holdingRegisters[77] = condenser_fan_disable;
+  // holdingRegisters[78] = low_temp_alarm;
+  // // holdingRegisters[79] = high_temp_alarm;
+  // // holdingRegisters[80] = low_pres_alarm;
+  // // holdingRegisters[81] = high_pres_alarm;
+  // // holdingRegisters[82] = stop_alarm;
+  // // holdingRegisters[83] = 1; // inner_fan_alarm
+  // // holdingRegisters[87] = saved_hours;
+  // holdingRegisters[89] = stop;
+  // holdingRegisters[90] = vfd_start;
+}
 
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -516,7 +536,7 @@ void setup() {
 
   last_read_time = millis();
 
-  // xTaskCreatePinnedToCore(temperatureTask, "TemperatureTask", 2048, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(HMITask, "hmiTask", 2048, NULL, 1, NULL, 0);
 
   preferences.begin("EXV_Steps", false);
   currentStep = preferences.getInt("currentStep", 50);
@@ -535,34 +555,57 @@ void setup() {
 }
 
 // float temps[4] = [Comp1.SuctionTemp,Comp1.dischargeTemp,Comp1.SprayTemp,Comp1.SupplyTemp];
-int16_t temps[4];
+
 
 void loop() {
 
   // float temps = [Comp1.SuctionTemp,Comp1.dischargeTemp,Comp1.SprayTemp,Comp1.SupplyTemp];
-  tempSensors.updateStatus(temps);
-  Serial.println("--------------------------------------------------");
-  Serial.print("Compressor 1 Suction Temperature: ");
-  Serial.println(temps[0]);
-  Serial.println("--------------------------------------------------");
-  Serial.print("Compressor 1 Discharge Temperature: ");
-  Serial.println(temps[1]);
-  Serial.println("--------------------------------------------------");
-  Serial.print("Compressor 1 Spray Temperature: ");
-  Serial.println(temps[2]);
-  Serial.println("--------------------------------------------------");
-  Serial.print("Compressor 1 Supply Temperature: ");
-  Serial.println(temps[3]);
+  if (millis() - wait_time >= 1000) {
+    // tempSensors.updateStatus(temps);
+    // Comp1.SuctionTemp = temps[0];
+    // Comp1.dischargeTemp = temps[1];
+    // Comp1.SprayTemp = temps[2];
+    // Comp1.SupplyTemp = temps[3];
+    // Comp2.SuctionTemp = temps[4];
+    // Comp2.dischargeTemp = temps[5];
+#ifdef DEBUG
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Suction Temperature: ");
+    // Serial.println(Comp1.SuctionTemp);
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Discharge Temperature: ");
+    // Serial.println(Comp1.dischargeTemp);
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Spray Temperature: ");
+    // Serial.println(Comp1.SprayTemp);
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Supply Temperature: ");
+    // Serial.println(Comp1.SupplyTemp);
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Supply Temperature: ");
+    // Serial.println(Comp2.SuctionTemp);
+    // Serial.println("--------------------------------------------------");
+    // Serial.print("Compressor 1 Supply Temperature: ");
+    // Serial.println(Comp2.dischargeTemp);
+#endif
+    wait_time = millis();
+    save_in_holding_registers();
 
-  writeSingleRegister(1, 0, temps[0]);
-  writeSingleRegister(1, 1, temps[1]);
-  writeSingleRegister(1, 2, temps[2]);
-  writeSingleRegister(1, 3, temps[3]);
+    // writeSingleRegister(1, 0, int16_t(holdingRegisters[0]));
+    // writeSingleRegister(1, 1, int16_t(holdingRegisters[1]));
+    // writeSingleRegister(1, 2, int16_t(holdingRegisters[2]));
+    // writeSingleRegister(1, 3, int16_t(holdingRegisters[3]));
 
-  
+    // writeMultipleRegisters(1, 0, holdingRegisters, 50);
+  }
 
 
-  delay(1000);
+
+
+
+
+
+  // delay(1000);
 
   // save_in_holding_registers();
 
@@ -778,39 +821,39 @@ void loop() {
 
 
   // if (exv_state == reset) {
-  //   if (currentStep < 50) {
+  if (currentStep < 50) {
 
-  //     Serial.println("EXV_STATE_RESET, moving to 0");
-  //     write_on_EXV(0);
+    Serial.println("EXV_STATE_RESET, moving to 0");
+    write_on_EXV(0);
 
-  //     if (currentStep == 0) {
+    if (currentStep == 0) {
 
-  //       Serial.println("EXV_STATE_RESET, moved to 0");
-  //       exv_state = initializing;
+      Serial.println("EXV_STATE_RESET, moved to 0");
+      exv_state = initializing;
 
-  //       digitalWrite(EXV_1, HIGH);
-  //       digitalWrite(EXV_2, HIGH);
-  //       digitalWrite(EXV_3, HIGH);
-  //       digitalWrite(EXV_4, HIGH);
-  //       // exv_state = ready;
-  //     }
-  //   }  //
-  //   else {
+      digitalWrite(EXV_1, HIGH);
+      digitalWrite(EXV_2, HIGH);
+      digitalWrite(EXV_3, HIGH);
+      digitalWrite(EXV_4, HIGH);
+      // exv_state = ready;
+    }
+  }  //
+  else {
 
-  //     Serial.println("EXV_STATE_RESET, moving to 125");
-  //     write_on_EXV(125);
+    Serial.println("EXV_STATE_RESET, moving to 125");
+    write_on_EXV(125);
 
-  //     if (currentStep == 125) {
+    if (currentStep == 125) {
 
-  //       Serial.println("EXV_STATE_RESET, moved to 125");
-  //       exv_state = initializing;
+      Serial.println("EXV_STATE_RESET, moved to 125");
+      exv_state = initializing;
 
-  //       digitalWrite(EXV_1, HIGH);
-  //       digitalWrite(EXV_2, HIGH);
-  //       digitalWrite(EXV_3, HIGH);
-  //       digitalWrite(EXV_4, HIGH);
-  //     }
-  //   }
+      digitalWrite(EXV_1, HIGH);
+      digitalWrite(EXV_2, HIGH);
+      digitalWrite(EXV_3, HIGH);
+      digitalWrite(EXV_4, HIGH);
+    }
+  }
   // }  //
   // else if (exv_state == initializing) {
 
